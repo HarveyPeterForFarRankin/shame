@@ -83,13 +83,12 @@ function App() {
   const classes = useStyles();
 
   const nextText = () => {
+    setButtonToShow(false);
     setActiveText(activeText + 1);
     playAudio(getRandomShameSound());
   };
 
   useEffect(() => {
-    setButtonToShow(false);
-
     if (texts[activeText]) {
       const typed = new Typed(el.current, {
         strings: [texts[activeText]],
