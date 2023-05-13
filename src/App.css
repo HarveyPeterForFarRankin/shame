@@ -1,38 +1,98 @@
-.App {
-  text-align: center;
+.button {
+  opacity: 0;
+  transition: opacity 3s ease-in;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.buttonShow {
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.arrow {
+  opacity: 0;
+  cursor: pointer;
+  position: fixed;
+  animation: pulse 2s infinite;
+  left: 90%;
+  bottom: 3%;
+}
+
+.arrowShow {
+  opacity: 1;
+}
+
+.redButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  background-color: #d50000;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+  animation: pulse 2s infinite;
+}
+
+.redButton:active {
+  box-shadow: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#heart {
+  position: relative;
+  width: 100px;
+  height: 90px;
+  margin-top: 10px;
+  animation: float 8s infinite;
 }
 
-.App-link {
-  color: #61dafb;
+#heart::before,
+#heart::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 52px;
+  height: 80px;
+  border-radius: 50px 50px 0 0;
+  background: red;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+#heart::before {
+  left: 50px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+#heart::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(-50%, -50%) translate3d(-600px, -300px, -600px);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: translate(-50%, -50%) translate3d(680px, 300px, 600px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translate3d(-600px, -300px, -600px);
   }
 }
