@@ -68,13 +68,6 @@ const getAudio = action => {
   }
 };
 
-const shames = [shame1, shame2, shame3, shame4, shame5];
-
-const getRandomShameSound = () => {
-  const ran = Math.floor(Math.random() * shames.length - 1);
-  return shames[ran];
-};
-
 function App() {
   const normlSpeed = 100;
   const el = useRef(null);
@@ -90,7 +83,6 @@ function App() {
   const nextText = () => {
     setButtonToShow(false);
     setActiveText(activeText + 1);
-    playAudio(getRandomShameSound());
   };
 
   useEffect(() => {
