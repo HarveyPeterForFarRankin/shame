@@ -1,5 +1,6 @@
 import './App.css';
 import Typed from 'typed.js';
+import ProgressBar from 'progressbar.js';
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRightAlt, ArrowRightRounded } from '@mui/icons-material';
 import { Menu, MenuItem } from '@mui/material';
@@ -14,7 +15,7 @@ import hi from './assets/hi.mp3';
 const HI_AUDIO = 'HI_AUDIO';
 const SHAME_AUDIO = 'SHAME_AUDIO';
 
-const texts = ['Welcome to this webpage, on the web. Please click the arrow at the bottom of the page...please', 'If you are bored - you can change the speed at the top right.... if you dare...... give it a go', 'I wanted to deploy something to AWS, so i wanted a masterpiece - but instead i made this', 'sfsdfgsfjhsdfjhdsfgh fsjdhgjhsdfjhgsdhjgf hsdf g', 'That was a joke, that made no sense - at this point, you will want 10x speed', 'You are also probably wondering what the point of this site is even now, there is no point', 'SHAME', 'Hey Darcy'];
+const texts = ['Hi, and welcome to this webpage. Please click the arrow at the bottom of the page...please', 'If you are bored - you can change the speed at the top right.... if you dare...... give it a go', 'I wanted to deploy something to AWS, so i wanted a masterpiece - but instead i made this', 'sfsdfgsfjhsdfjhdsfgh fsjdhgjhsdfjhgsdhjgf hsdf g', 'That was a joke, that made no sense - at this point, you will want 10x speed', 'You are also probably wondering what the point of this site is even now, there is no point', 'SHAME', 'Hey Darcy'];
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -47,9 +48,11 @@ const audioMapper = {
   10: shame5,
 };
 
-const playAudio = audio => {
+const playAudio = (audio, speed = 1) => {
   if (audio) {
-    new Audio(audio).play();
+    const audioPlayer = new Audio(audio);
+    audioPlayer.playbackRate = speed;
+    audioPlayer.play();
   }
 };
 
@@ -75,11 +78,13 @@ const getRandomShameSound = () => {
 function App() {
   const normlSpeed = 100;
   const el = useRef(null);
+  const loadingEl = useRef(null);
   const [activeText, setActiveText] = useState(0);
   const [showButton, setButtonToShow] = useState(false);
   const [textSpeed, setTextSpeed] = useState(normlSpeed);
   const [hiSaid, setHiSaid] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [start, setStart] = useState(false);
   const classes = useStyles();
 
   const nextText = () => {
@@ -89,9 +94,11 @@ function App() {
   };
 
   useEffect(() => {
-    if (texts[activeText]) {
+    if (texts[activeText] && start) {
       const typed = new Typed(el.current, {
+        smartBackspace: true,
         strings: [texts[activeText]],
+        fadeOut: true,
         typeSpeed: textSpeed,
         showCursor: false,
         cursorChar: '|',
@@ -105,12 +112,24 @@ function App() {
       });
       return () => typed.destroy();
     }
-  }, [activeText, textSpeed]);
+  }, [activeText, textSpeed, start]);
+
+  useEffect(() => {
+    var bar = new ProgressBar.Line(loadingEl.current, {
+      duration: 8000,
+      color: 'white',
+    });
+
+    bar.animate(8);
+    setTimeout(() => setStart(true), 8000);
+  }, []);
 
   const handleClick = event => {
     if (!hiSaid) {
       const action = { type: HI_AUDIO };
-      playAudio(getAudio(action));
+      const audio = getAudio(action);
+
+      playAudio(audio);
       setHiSaid(true);
     }
 
@@ -125,7 +144,9 @@ function App() {
     }
 
     const action = { type: SHAME_AUDIO, payload: speed };
-    playAudio(getAudio(action));
+    const audio = getAudio(action);
+    playAudio(audio, speed);
+
     setAnchorEl(null);
   };
 
@@ -139,6 +160,7 @@ function App() {
 
   return (
     <div className='screen'>
+      <div ref={loadingEl}></div>
       <div className='App'>{<span ref={el} />}</div>
       <div>
         <ArrowRightAlt style={{ fontSize: 100 }} className={`arrow ${showButton ? 'arrowShow' : 'arrow'}`} onClick={nextText} />
